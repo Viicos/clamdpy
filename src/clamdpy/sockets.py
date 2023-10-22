@@ -4,7 +4,7 @@ import socket
 import struct
 import sys
 from pathlib import Path
-from typing import ClassVar, Literal, overload
+from typing import Literal, overload
 
 from .exceptions import BufferTooLongError, CommandReadTimedOut, ConnectionError, ResponseError, UnknownCommand
 from .models import ScanResult, VersionInfo
@@ -17,8 +17,6 @@ DEFAULT_UNIX_SOCKET_PATH = "/var/run/clamav/clamd.ctl"
 
 class ClamdNetworkSocket:
     """A class to interact with clamd with a network socket (`socket.AF_INET`)."""
-
-    socket_class: ClassVar[type[socket.socket]] = socket.socket
 
     def __init__(
         self,
@@ -40,7 +38,7 @@ class ClamdNetworkSocket:
 
     def _acquire_socket(self) -> socket.socket:
         try:
-            clamd_socket = self.socket_class(socket.AF_INET, socket.SOCK_STREAM)
+            clamd_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             clamd_socket.settimeout(self.timeout)
             clamd_socket.connect((self.host, self.port))
             return clamd_socket
@@ -49,7 +47,7 @@ class ClamdNetworkSocket:
                 raise ConnectionError(f"Error while connecting to {self.host}:{self.port}: {e.args[0]}")
             raise ConnectionError(f"Error while connecting to {self.host}:{self.port}: {e.args[1]}", int(e.args[0]))
 
-    def _command(self, command: str, *args: str, multiline: bool = True) -> str:
+    def _command(self, command: str, *args: str, multiline: bool = True, raise_on_error: bool = True) -> str:
         with self._acquire_socket() as sock:
             self._send(sock, command, *args)
             recv = self._recv(sock, multiline=multiline)
@@ -57,9 +55,10 @@ class ClamdNetworkSocket:
                 raise UnknownCommand(command)
             if recv == COMMAND_READ_TIMED_OUT:
                 raise CommandReadTimedOut(command)
-            response = recv.rsplit("ERROR", 1)
-            if len(response) > 1:
-                raise ResponseError(response[0])
+            if raise_on_error:
+                response = recv.rsplit("ERROR", 1)
+                if len(response) > 1:
+                    raise ResponseError(command, response[0].strip())
             return recv
 
     def _send(self, sock: socket.socket, command: str, *args: str) -> None:
@@ -92,7 +91,7 @@ class ClamdNetworkSocket:
 
     def _any_scan(self, command: str, path: StrPath, raw: bool = False) -> list[ScanResult] | str:
         path = Path(path).absolute()
-        result = self._command(command, str(path))
+        result = self._command(command, str(path), raise_on_error=False)
         if raw:
             return result
         return [ScanResult._from_str(line, command) for line in result.split(self._endline)]
@@ -199,7 +198,7 @@ class ClamdNetworkSocket:
         buff: SupportsRead[bytes],
         raw: Literal[False] = ...,
         max_chunk_size: int | None = ...,
-    ) -> list[ScanResult]:
+    ) -> ScanResult:
         ...
 
     def instream(
@@ -207,7 +206,7 @@ class ClamdNetworkSocket:
         buff: SupportsRead[bytes],
         raw: bool = False,
         max_chunk_size: int | None = None,
-    ) -> list[ScanResult] | str:
+    ) -> ScanResult | str:
         """Scan a stream of data. The stream is sent to clamd in chunks, after INSTREAM,
         on the same socket on which the command was sent.
         """
@@ -226,10 +225,10 @@ class ClamdNetworkSocket:
 
             result = self._recv(sock)
             if "INSTREAM size limit exceeded" in result:
-                raise BufferTooLongError(result.rsplit("ERROR", 1)[0])
+                raise BufferTooLongError(result.rsplit("ERROR", 1)[0].strip())
             if raw:
                 return result
-            return [ScanResult._from_str(line, "INSTREAM", stream=True) for line in result.split(self._endline)]
+            return ScanResult._from_str(result, "INSTREAM", stream=True)
 
 
 class ClamdUnixSocket(ClamdNetworkSocket):
@@ -249,7 +248,7 @@ class ClamdUnixSocket(ClamdNetworkSocket):
 
     def _acquire_socket(self) -> socket.socket:
         try:
-            clamd_socket = self.socket_class(socket.AF_UNIX, socket.SOCK_STREAM)
+            clamd_socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
             clamd_socket.settimeout(self.timeout)
             clamd_socket.connect(str(self.socket_path))
             return clamd_socket
