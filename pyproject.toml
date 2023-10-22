@@ -55,7 +55,10 @@ select = [
 ]
 line-length = 120
 src = ["src"]
-ignore = ["PLR0913"]
+ignore = ["E501", "PLR0913"]
 
 [tool.ruff.isort]
 known-first-party = ["clamdpy"]
+
+[tool.pytest.ini_options]
+pythonpath = "src"
