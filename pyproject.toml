@@ -22,6 +22,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Typing :: Typed"
 ]
+license = {file = "LICENSE"}
 dynamic = ["version"]
 
 [project.urls]
