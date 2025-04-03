@@ -85,7 +85,7 @@ class ClamdNetworkSocket:
     def _any_scan(self, command: str, path: StrPath, raw: Literal[True]) -> str: ...
 
     @overload
-    def _any_scan(self, command: str, path: StrPath, raw: Literal[False] = ...) -> list[ScanResult]: ...
+    def _any_scan(self, command: str, path: StrPath, raw: Literal[False] = False) -> list[ScanResult]: ...
 
     def _any_scan(self, command: str, path: StrPath, raw: bool = False) -> list[ScanResult] | str:
         path = Path(path).absolute()
@@ -114,7 +114,7 @@ class ClamdNetworkSocket:
     def version(self, raw: Literal[True]) -> str: ...
 
     @overload
-    def version(self, raw: Literal[False] = ...) -> VersionInfo: ...
+    def version(self, raw: Literal[False] = False) -> VersionInfo: ...
 
     def version(self, raw: bool = False) -> VersionInfo | str:
         """Print program and database versions.
@@ -138,7 +138,7 @@ class ClamdNetworkSocket:
     def scan(self, path: StrPath, raw: Literal[True]) -> str: ...
 
     @overload
-    def scan(self, path: StrPath, raw: Literal[False] = ...) -> list[ScanResult]: ...
+    def scan(self, path: StrPath, raw: Literal[False] = False) -> list[ScanResult]: ...
 
     def scan(self, path: StrPath, raw: bool = False) -> list[ScanResult] | str:
         """Scan a file or a directory (recursively) with archive support enabled (if not disabled in clamd.conf).
@@ -151,7 +151,7 @@ class ClamdNetworkSocket:
     def contscan(self, path: StrPath, raw: Literal[True]) -> str: ...
 
     @overload
-    def contscan(self, path: StrPath, raw: Literal[False] = ...) -> list[ScanResult]: ...
+    def contscan(self, path: StrPath, raw: Literal[False] = False) -> list[ScanResult]: ...
 
     def contscan(self, path: StrPath, raw: bool = False) -> list[ScanResult] | str:
         """Scan file or directory (recursively) with archive support enabled and don't stop
@@ -164,7 +164,7 @@ class ClamdNetworkSocket:
     def multiscan(self, path: StrPath, raw: Literal[True]) -> str: ...
 
     @overload
-    def multiscan(self, path: StrPath, raw: Literal[False] = ...) -> list[ScanResult]: ...
+    def multiscan(self, path: StrPath, raw: Literal[False] = False) -> list[ScanResult]: ...
 
     def multiscan(self, path: StrPath, raw: bool = False) -> list[ScanResult] | str:
         """Scan file in a standard way or scan directory (recursively) using multiple threads
@@ -178,15 +178,15 @@ class ClamdNetworkSocket:
         self,
         buff: SupportsRead[bytes],
         raw: Literal[True],
-        max_chunk_size: int | None = ...,
+        max_chunk_size: int | None = None,
     ) -> str: ...
 
     @overload
     def instream(
         self,
         buff: SupportsRead[bytes],
-        raw: Literal[False] = ...,
-        max_chunk_size: int | None = ...,
+        raw: Literal[False] = False,
+        max_chunk_size: int | None = None,
     ) -> ScanResult: ...
 
     def instream(

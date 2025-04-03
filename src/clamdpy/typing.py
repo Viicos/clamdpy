@@ -10,4 +10,4 @@ class SupportsRead(Protocol[_T_co]):
 
 
 # Taken from _typeshed/__init__.pyi
-StrPath = Union[str, "PathLike[str]"]
+StrPath = Union[str, PathLike[str]]
