@@ -4,36 +4,22 @@ on: [push]
 
 jobs:
   black:
-    name: Check code formatting with black
+    name: Lint the codebase
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Extract black version from requirements-dev.txt
-        id: black_version
-        run: echo "::set-output name=version::$(grep -oP 'black==\K[^"]+' requirements-dev.txt)"
-      - uses: psf/black@stable
+      - uses: astral-sh/setup-uv@v5
         with:
-          src: ./src
-          version: ${{ steps.back_version.outputs.version }}
-  ruff:
-    name: Check code formatting with ruff
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Extract ruff version from requirements-dev.txt
-        id: ruff_version
-        run: echo "::set-output name=version::$(grep -oP 'ruff==\K[^"]+' requirements-dev.txt)"
-      - uses: chartboost/ruff-action@v1
-        with:
-          version: ${{ steps.ruff_version.outputs.version }}
-  mypy:
-    name: Check type hints with mypy
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-      - run: |
-          pip install -r requirements-dev.txt
-          mypy src/
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: uv sync --group dev
+
+      - name: Run Ruff formatter
+        run: uv run ruff format src/ --diff
+
+      - name: Run Ruff linter
+        run: uv run ruff check src/ --output-format=github
+
+      - name: Run Pyright
+        run: uv run pyright src/

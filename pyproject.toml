@@ -1,56 +1,57 @@
 [build-system]
-requires = ["setuptools>=60.0.0"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "clamdpy"
+version = "0.1.0.post1"
 description = "A Python wrapper around clamd, the ClamAV daemon"
 authors = [
     {name = "Viicos", email = "65306057+Viicos@users.noreply.github.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "License :: OSI Approved :: MIT License",
     "Typing :: Typed"
 ]
 license = {file = "LICENSE"}
-dynamic = ["version"]
 
 [project.urls]
 Homepage = "https://github.com/Viicos/clamdpy"
 Source = "https://github.com/Viicos/clamdpy"
 Changelog = "https://github.com/Viicos/clamdpy/blob/main/CHANGELOG.md"
 
-[tool.setuptools.dynamic]
-version = {attr = "clamdpy.__version__"}
+[dependency-groups]
+dev = [
+    "pyright>=1.1.398",
+    "pytest>=8.3.5",
+    "ruff>=0.11.3",
+    "tox>=4.25.0",
+    "tox-gh>=1.5.0",
+    "tox-uv>=1.25.0",
+]
 
-[tool.setuptools]
-package-dir = {"" = "src"}
 
-[tool.setuptools.packages.find]
-where = ["src"]
-
-[tool.setuptools.package-data]
-"clamdpy" = ["py.typed"]
-
-[tool.black]
-line-length = 120
+[tool.pyright]
+typeCheckingMode = "strict"
+reportPrivateUsage = false
 
 [tool.ruff]
+target-version = "py39"
 line-length = 120
 src = ["src"]
 
-[tools.ruff.lint]
+[tool.ruff.lint]
 select = [
     "E",  # pycodestyle (E)
     "W",  # pycodestyle (W)
@@ -66,3 +67,21 @@ known-first-party = ["clamdpy"]
 
 [tool.pytest.ini_options]
 pythonpath = "src"
+
+[tool.tox]
+requires = ["tox>=4.21"]
+env_list = ["py39", "py310", "py311", "py312", "py313"]
+
+[tool.tox.env_run_base]
+description = "Run test under {base_python}"
+runner = "uv-venv-lock-runner"
+dependency_groups = ["dev"]
+uv_python_preference = "only-system"
+commands = [["pytest"]]
+
+[tool.tox.gh.python]
+"3.9" = "py39"
+"3.10" = "py310"
+"3.11" = "py311"
+"3.12" = "py312"
+"3.13" = "py313"
