@@ -47,6 +47,10 @@ where = ["src"]
 line-length = 120
 
 [tool.ruff]
+line-length = 120
+src = ["src"]
+
+[tools.ruff.lint]
 select = [
     "E",  # pycodestyle (E)
     "W",  # pycodestyle (W)
@@ -55,11 +59,9 @@ select = [
     "I",  # isort
     "PL", # Pylint
 ]
-line-length = 120
-src = ["src"]
 ignore = ["E501", "PLR0913"]
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 known-first-party = ["clamdpy"]
 
 [tool.pytest.ini_options]
