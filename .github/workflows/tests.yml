@@ -15,7 +15,9 @@ jobs:
       - name: Set up uv (Python ${{ matrix.python-version }})
         uses: astral-sh/setup-uv@v6
       - name: Install tox
-        run: uv tool install --python-preference only-managed tox --with tox-uv
+        run: uv tool install --python-preference only-managed --python 3.13 tox --with tox-uv
+      - name: Install Python ${{ matrix.python-version }}
+        run: uv python install --python-preference only-managed ${{ matrix.python-version }}
       - name: Test with tox
         run: tox run
         env:
