@@ -11,11 +11,15 @@ jobs:
         python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+      # System Python needed to install tox as a tool:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
       - name: Set up uv (Python ${{ matrix.python-version }})
         uses: astral-sh/setup-uv@v6
       - name: Install tox
-        run: uv tool install --managed-python --python 3.13 tox --with tox-uv
+        run: uv tool install --no-managed-python --no-python-downloads --python 3.13 tox --with tox-uv
       - name: Install Python ${{ matrix.python-version }}
         run: uv python install --managed-python ${{ matrix.python-version }}
       - name: Test with tox
