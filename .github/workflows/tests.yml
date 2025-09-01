@@ -12,8 +12,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Set up uv (${{ matrix.python-version }})
-        uses: astral-sh/setup-uv@v5
+      - name: Set up uv (Python ${{ matrix.python-version }})
+        uses: astral-sh/setup-uv@v6
       - name: Install tox
         run: uv tool install --python-preference only-managed tox --with tox-uv
       - name: Test with tox
