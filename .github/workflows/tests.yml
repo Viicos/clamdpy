@@ -15,13 +15,11 @@ jobs:
       - name: Set up uv (Python ${{ matrix.python-version }})
         uses: astral-sh/setup-uv@v6
       - name: Install tox
-        run: uv tool install --managed-python --python 3.13 tox --with tox-uv
+        run: uv tool install --managed-python --python 3.13 tox --with tox-uv --with tox-gh
       - name: Install Python ${{ matrix.python-version }}
         run: uv python install --managed-python ${{ matrix.python-version }}
-      - name: Setup test suite
-        run: tox run -vv --notest --skip-missing-interpreters false
       - name: Test with tox
-        run: tox run --skip-pkg-install
+        run: tox run
         env:
           TOX_GH_MAJOR_MINOR: ${{ matrix.python-version }}
           UV_PYTHON_DOWNLOADS: never
