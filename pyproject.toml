@@ -77,6 +77,7 @@ description = "Run test under {base_python}"
 runner = "uv-venv-lock-runner"
 dependency_groups = ["dev"]
 uv_python_preference = "only-managed"
+uv_sync_flags = ["--no-python-downloads"]
 commands = [["pytest"]]
 
 [tool.tox.gh.python]
