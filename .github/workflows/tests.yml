@@ -22,3 +22,4 @@ jobs:
         run: tox run
         env:
           TOX_GH_MAJOR_MINOR: ${{ matrix.python-version }}
+          UV_PYTHON_DOWNLOADS: never
