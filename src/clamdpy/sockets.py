@@ -1,18 +1,16 @@
-from __future__ import annotations
-
 import socket
 import struct
 import sys
 from pathlib import Path
-from typing import Literal, overload
+from typing import Final, Literal, overload
 
 from .exceptions import BufferTooLongError, CommandReadTimedOut, ConnectionError, ResponseError, UnknownCommand
 from .models import ScanResult, VersionInfo
 from .typing import StrPath, SupportsRead
 
-UNKNOWN_COMMAND = "UNKNOWN COMMAND"
-COMMAND_READ_TIMED_OUT = "COMMAND READ TIMED OUT"
-DEFAULT_UNIX_SOCKET_PATH = "/var/run/clamav/clamd.ctl"
+UNKNOWN_COMMAND: Final = "UNKNOWN COMMAND"
+COMMAND_READ_TIMED_OUT: Final = "COMMAND READ TIMED OUT"
+DEFAULT_UNIX_SOCKET_PATH: Final = "/var/run/clamav/clamd.ctl"
 
 
 class ClamdNetworkSocket:

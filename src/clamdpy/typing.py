@@ -1,5 +1,5 @@
 from os import PathLike
-from typing import Protocol, TypeVar, Union
+from typing import Protocol, TypeAlias, TypeVar
 
 _T_co = TypeVar("_T_co", covariant=True)
 
@@ -10,4 +10,4 @@ class SupportsRead(Protocol[_T_co]):
 
 
 # Taken from _typeshed/__init__.pyi
-StrPath = Union[str, PathLike[str]]
+StrPath: TypeAlias = str | PathLike[str]
