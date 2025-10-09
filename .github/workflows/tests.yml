@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Set up uv (Python ${{ matrix.python-version }})
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v7
       - name: Install tox
         run: uv tool install --managed-python --python 3.13 tox --with tox-uv --with tox-gh
       - name: Install Python ${{ matrix.python-version }}
