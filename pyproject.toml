@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "clamdpy"
-version = "0.1.0.post1"
+version = "0.2.0"
 description = "A Python wrapper around clamd, the ClamAV daemon"
 authors = [
     {name = "Viicos", email = "65306057+Viicos@users.noreply.github.com"}

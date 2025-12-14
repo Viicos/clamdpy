@@ -6,7 +6,6 @@ This is a maintained and updated fork of https://github.com/graingert/python-cla
 
 [![Python versions](https://img.shields.io/pypi/pyversions/clamdpy.svg)](https://www.python.org/downloads/)
 [![PyPI version](https://img.shields.io/pypi/v/clamdpy.svg)](https://pypi.org/project/clamdpy/)
-[![Code style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://black.readthedocs.io/en/stable/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 ## Installation
