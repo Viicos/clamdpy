@@ -8,16 +8,18 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
-        run: |
-          pip install -r requirements-dev.txt
+      - uses: actions/checkout@v6
+      - name: Set up uv (Python ${{ matrix.python-version }})
+        uses: astral-sh/setup-uv@v7
+      - name: Install tox
+        run: uv tool install --managed-python --python 3.13 tox --with tox-uv --with tox-gh
+      - name: Install Python ${{ matrix.python-version }}
+        run: uv python install --managed-python ${{ matrix.python-version }}
       - name: Test with tox
-        run: tox
+        run: tox run
+        env:
+          TOX_GH_MAJOR_MINOR: ${{ matrix.python-version }}
+          UV_PYTHON_DOWNLOADS: never

@@ -3,12 +3,12 @@ from __future__ import annotations
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import Literal, NamedTuple
+from typing import Final, Literal, NamedTuple
 
 from .exceptions import ResponseError
 
 # TODO Be able to match `:` in path names
-RESULT_REGEX = re.compile(r"^(?P<path>[^:]*): ((?P<reason>.+) )?(?P<status>(FOUND|OK|ERROR))$")
+RESULT_REGEX: Final = re.compile(r"^(?P<path>[^:]*): ((?P<reason>.+) )?(?P<status>(FOUND|OK|ERROR))$")
 
 
 class VersionInfo(NamedTuple):
