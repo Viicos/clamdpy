@@ -6,7 +6,7 @@
 - Add support for Python 3.13 and 3.14.
 - Switch to Ruff.
 - Use importlib.metadata for the `clamd.__version__` attribute.
-- Some tweaks to type hints.s
+- Some tweaks to type hints.
 
 ## 0.1.0.post1 (2024-01-06)
 

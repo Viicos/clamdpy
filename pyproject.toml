@@ -21,6 +21,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
     "License :: OSI Approved :: MIT License",
     "Typing :: Typed"
 ]
@@ -34,13 +35,16 @@ Changelog = "https://github.com/Viicos/clamdpy/blob/main/CHANGELOG.md"
 [dependency-groups]
 dev = [
     "pyright>=1.1.398",
-    "pytest>=8.3.5",
+    "pytest>=9.1.0",
     "ruff>=0.11.3",
     "tox>=4.25.0",
     "tox-gh>=1.5.0",
     "tox-uv>=1.25.0",
 ]
-
+build = [
+    "build",
+    "twine",
+]
 
 [tool.uv]
 required-version = ">=0.9.0"
@@ -68,12 +72,13 @@ ignore = ["E501", "PLR0913"]
 [tool.ruff.lint.isort]
 known-first-party = ["clamdpy"]
 
-[tool.pytest.ini_options]
-pythonpath = "src"
+[tool.pytest]
+testpaths = ["tests"]
+strict = true
 
 [tool.tox]
 requires = ["tox>=4.21"]
-env_list = ["py310", "py311", "py312", "py314"]
+env_list = ["py310", "py311", "py312", "py314", "py315"]
 
 [tool.tox.env_run_base]
 description = "Run test under {base_python}"
@@ -89,3 +94,4 @@ commands = [["pytest"]]
 "3.12" = ["py312"]
 "3.13" = ["py313"]
 "3.14" = ["py314"]
+"3.15" = ["py315"]
